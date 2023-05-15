@@ -11,7 +11,7 @@ type AppProps = {
     busy: boolean,
     page: number | undefined,
     repos: GitRepo[],
-}
+};
 
 const busy = (state: AppState) => state.git.repos.presentation.busy;
 const page = (state: AppState) => state.git.repos.pagination.current;
@@ -39,19 +39,27 @@ export const App = () => {
                 <Col>
                     <Table hover striped bordered>
                         <thead>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Author</th>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Author</th>
+                            </tr>
                         </thead>
                         <tbody>
                         {
                             repos.map(repo => (
-                                <tr>
+                                <tr key={repo.id}>
                                     <th>{repo.id}</th>
-                                    <td><a href={repo.url}>{repo.fullName}</a></td>
+                                    <td>
+                                        <a target="_blank" href={repo.url}>{repo.fullName}</a>
+                                    </td>
                                     <td>{repo.description}</td>
-                                    <td><a href={repo.owner.url}><img className="avatar" src={repo.owner.avatar} alt=""/></a></td>
+                                    <td>
+                                        <a target="_blank" href={repo.owner.url} title={repo.owner.name ?? repo.owner.login}>
+                                            <img className="avatar" src={repo.owner.avatar} alt=""/>
+                                        </a>
+                                    </td>
                                 </tr>
                             ))
                         }
@@ -68,4 +76,3 @@ export const App = () => {
         </Container>
     );
 };
-

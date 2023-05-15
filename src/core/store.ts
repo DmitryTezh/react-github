@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createEnvironment } from './environment';
 import { ownSlice, gitSlice } from '../reducer';
+import { once } from '../utils';
 
-export const store = configureStore({
+export const createStore = once(() => configureStore({
     reducer: {
         own: ownSlice.reducer,
         git: gitSlice.reducer,
@@ -15,6 +16,7 @@ export const store = configureStore({
                 },
             },
         }),
-});
+}));
 
-export type AppDispatch = typeof store.dispatch;
+type Store = ReturnType<typeof createStore>;
+export type AppDispatch = Store["dispatch"];

@@ -5,7 +5,10 @@ export type HasId = {
 export interface Collection<T extends HasId> {
     presentation: {
         busy: boolean,
-        page: number | undefined,
+    },
+    pagination: {
+        current: number | undefined,
+        last: number | undefined,
     },
     data: {
         [id: number]: T,

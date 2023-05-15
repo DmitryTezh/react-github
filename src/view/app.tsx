@@ -8,8 +8,8 @@ export const App = () => {
     const { actions } = useAppContext();
     useEffect(() => {
         const fetch = async () => {
-            await actions.requestGitRepos({ page: 1 });
-            await actions.requestGitRepos({ page: 2 });
+            await actions.requestGitRepos();
+            await actions.requestGitRepos();
         };
         fetch();
     }, []);

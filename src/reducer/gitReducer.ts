@@ -6,17 +6,15 @@ const initialState: GitState = {
     repos: {
         presentation: {
             busy: false,
-            page: undefined,
+        },
+        pagination: {
+            current: undefined,
+            last: undefined,
         },
         data: {},
         pages: {},
     },
 };
-
-export interface GitRepoPagePayload {
-    page: number;
-    repos: GitRepo[];
-}
 
 export const gitSlice = createSlice({
     name: 'git',
@@ -25,17 +23,43 @@ export const gitSlice = createSlice({
         setRepoBusy: (state: GitState, action: PayloadAction<boolean>) => {
             state.repos.presentation.busy = action.payload;
         },
-        setRepoPage: (state: GitState, action: PayloadAction<number>) => {
-            state.repos.presentation.page = action.payload;
+        setPrevRepoPage: (state: GitState) => {
+            const pagination = state.repos.pagination;
+            if (pagination.last == null) {
+                pagination.current = undefined;
+                return;
+            }
+            if (pagination.current == null) {
+                pagination.current = 1;
+                return;
+            }
+            if (pagination.current > 1) {
+                pagination.current--;
+            }
         },
-        addRepoPage: (state: GitState, action: PayloadAction<GitRepoPagePayload>) => {
-            const { page, repos } = action.payload;
+        setNextRepoPage: (state: GitState) => {
+            const { pagination } = state.repos;
+            if (pagination.last == null) {
+                pagination.current = undefined;
+                return;
+            }
+            if (pagination.current == null) {
+                pagination.current = 1;
+                return;
+            }
+            if (pagination.current < pagination.last) {
+                pagination.current++;
+            }
+        },
+        addRepoPage: (state: GitState, action: PayloadAction<GitRepo[]>) => {
             const ids: number[] = [];
-            for (const repo of repos) {
+            for (const repo of action.payload) {
                 state.repos.data[repo.id] = repo;
                 ids.push(repo.id);
             }
-            state.repos.pages[page] = { ids };
+            const { pagination } = state.repos;
+            pagination.last = (pagination.last ?? 0) + 1;
+            state.repos.pages[pagination.last] = { ids };
         },
     },
 });

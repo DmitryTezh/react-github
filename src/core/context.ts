@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators, Store } from '@reduxjs/toolkit';
 
-import { actions, AppActions } from './actions';
+import { actions, AppActions } from '../actions';
 import type { AppDispatch } from './store';
 import type { AppState } from '../model';
 import { raise } from '../utils';

@@ -1,3 +1,4 @@
-export { actions } from './actions';
-export { store } from './store';
 export { AppContext, createAppContextData, useAppContext, useAppDispatch } from './context';
+export { createEnvironment } from './environment';
+export type { Environment } from './environment';
+export { store } from './store';

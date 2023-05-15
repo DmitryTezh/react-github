@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 import { bindActionCreators, Store } from '@reduxjs/toolkit';
 
 import { actions, AppActions } from '../actions';
@@ -12,13 +12,13 @@ export interface AppContextData {
     getState: () => AppState;
 }
 
-const appContextStub: AppContextData = new Proxy<AppContextData>({} as any, {
-    get(target: AppContextData, key: string | symbol): any {
+const appContextStub = new Proxy<AppContextData>({} as any, {
+    get(target, key): any {
         raise('Context is not initialized');
     },
 });
 
-export const AppContext = createContext<AppContextData>(appContextStub);
+export const AppContext = createContext(appContextStub);
 
 export const createAppContextData = (store: Store<AppState>): AppContextData => {
     return {
@@ -27,5 +27,6 @@ export const createAppContextData = (store: Store<AppState>): AppContextData => 
     };
 };
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppContext = () => useContext<AppContextData>(AppContext);
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
+export const useAppContext = () => useContext(AppContext);

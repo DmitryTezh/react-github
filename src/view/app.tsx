@@ -1,36 +1,71 @@
-import React, { useEffect } from 'react';
-import logo from '../logo.svg';
-import { useAppContext } from '../core';
+import React, { useEffect, useMemo } from 'react';
+import { createStructuredSelector, Selector } from 'reselect';
+import { useAppContext, useAppSelector } from '../core';
+import type { AppState, GitRepo } from '../model';
+import { Container, Row, Col, Table, Spinner } from 'reactstrap';
+
 import './app.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
+type AppProps = {
+    busy: boolean,
+    page: number | undefined,
+    repos: GitRepo[],
+}
+
+const busy = (state: AppState) => state.git.repos.presentation.busy;
+const page = (state: AppState) => state.git.repos.pagination.current;
+const repos = (state: AppState) => Object.values(state.git.repos.data);
+
+const createPropsSelector = (): Selector<AppState, AppProps> => {
+    return createStructuredSelector({
+        busy,
+        page,
+        repos,
+    });
+};
+
 export const App = () => {
     const { actions } = useAppContext();
+    const { busy, repos } = useAppSelector(useMemo(createPropsSelector, []));
+
     useEffect(() => {
-        const fetch = async () => {
-            await actions.requestGitRepos();
-            await actions.requestGitRepos();
-        };
-        fetch();
-    }, []);
+        actions.requestGitRepos();
+    }, [actions]);
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <Container fluid>
+            <Row>
+                <Col>
+                    <Table hover striped bordered>
+                        <thead>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Author</th>
+                        </thead>
+                        <tbody>
+                        {
+                            repos.map(repo => (
+                                <tr>
+                                    <th>{repo.id}</th>
+                                    <td><a href={repo.url}>{repo.fullName}</a></td>
+                                    <td>{repo.description}</td>
+                                    <td><a href={repo.owner.url}><img className="avatar" src={repo.owner.avatar} alt=""/></a></td>
+                                </tr>
+                            ))
+                        }
+                        </tbody>
+                    </Table>
+                    {
+                        busy &&
+                        <div className="d-flex justify-content-center">
+                            <Spinner type="border" color="primary" />
+                        </div>
+                    }
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

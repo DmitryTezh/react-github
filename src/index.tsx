@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import { Root } from './view/root';
 import reportWebVitals from './reportWebVitals';
 

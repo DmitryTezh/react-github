@@ -31,12 +31,12 @@ export const requestGitRepos = createAsyncThunk<void, undefined, ThunkActionConf
                 name: x.name,
                 fullName: x.full_name,
                 description: x.description ?? undefined,
-                url: x.url,
+                url: x.html_url,
                 owner: {
                     id: x.owner.id,
                     name: x.owner.name ?? undefined,
                     login: x.owner.login,
-                    url: x.owner.url,
+                    url: x.owner.html_url,
                     avatar: x.owner.avatar_url,
                 },
             }));

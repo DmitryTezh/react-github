@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { App } from './app';
 import { AppContext, createAppContextData } from '../core';
@@ -6,7 +6,7 @@ import { createStore } from '../core';
 
 export const Root = () => {
     const store = useMemo(createStore, []);
-    const [context] = useState(() => createAppContextData(store));
+    const context = useMemo(() => createAppContextData(store), [store]);
 
     return (
         <Provider store={store}>

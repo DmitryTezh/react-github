@@ -38,7 +38,7 @@ export const App = () => {
             <Row>
                 <Col>
                     <Table hover striped bordered>
-                        <thead>
+                        <thead className="table-header">
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>

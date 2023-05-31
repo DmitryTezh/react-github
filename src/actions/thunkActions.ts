@@ -16,12 +16,13 @@ export const requestGitRepos = createAsyncThunk<void, undefined, ThunkActionConf
     'gitRepos/fetch',
     async (_, { dispatch, getState, extra }) => {
         const state = getState();
-        if (state.git.repos.presentation.busy) {
+        const { repos } = state.git;
+        if (repos.presentation.busy) {
             console.warn('Git repos loading in progress');
             return;
         }
-        const last = state.git.repos.pagination.last;
-        const ids = last != null ? state.git.repos.pages[last]?.ids : undefined;
+        const last = repos.pagination.last;
+        const ids = last != null ? repos.pages[last]?.ids : undefined;
         const from = ids?.[ids.length - 1];
         dispatch(gitActions.setRepoBusy(true));
         try {
